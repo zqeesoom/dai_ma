@@ -234,11 +234,6 @@
 									}
 								}
 					}
-					
-					$io = new iohandler();
-				
-			  	    $io->DeleteFile('.'.$arrNew['url']);
-					
 				}				
 				if( !empty($arrNew['url_vido'])){
 					$io = new iohandler();
