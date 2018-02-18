@@ -1,0 +1,101 @@
+ <{include file="public/header.html"}>
+ 
+    <div  region="center" showCollapseButton='false' allowResize='false' showHeader='false' cls="hideborder overhide">
+       <div class="bgwithe" style="background:none;">
+       			<a href="javascript:history.go(-1);">&nbsp;返&nbsp;回&nbsp;上&nbsp;页&nbsp;</a>
+                
+                <{section loop=$arrOne name=ls}>
+                	 <{if $smarty.section.ls.first}>
+                     <h1  align="center" style="font-size:20px"class="<{$arrOne[ls].style}>"><{$arrOne[ls].title|truncate:34}> </h1><br/>
+                     <center><em align="center" style="color:#999">时间：<{$arrOne[ls].times|date_format:"%Y-%m-%d"}> &nbsp;&nbsp;&nbsp;作者：<{$arrOne[ls].username}></em></center><br/>
+                     <hr style="border:1px dotted #a8a888;" /><br/>
+                    <{/if}>
+                      
+                    <p><article>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<{$arrOne[ls].content|htmlspecialchars_decode}></article></p></br>
+                   <{if <{$arrOne[ls].url_vido}>}><center><div class="voide" >
+                        <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="560" height="438">
+                        <param name="movie" value="/home/views/default/resource/js/vcastr2.swf">
+                        <param name="quality" value="high">
+                        <param name="FlashVars" value="vcastr_file=<{$arrOne[ls].url_vido}>&IsAutoPlay=0" /> 
+                        <embed src="/home/views/default/resource/js/vcastr2.swf?" FlashVars="vcastr_file=<{$arrOne[ls].url_vido}>&IsAutoPlay=0" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="560" height="438"></embed>
+                        </object>
+                      </div><br/><a href="/index.php/index/downfile/id/<{$arrOne[ls].id}>/url_vido/1">下载此视频</a></center><br/><{/if}>
+                  
+</article></p>
+                    
+                 
+          <{sectionelse}>
+                &nbsp;&nbsp;&nbsp;没有数据!<br/>
+           <{/section}>   
+            <p><article> <{section loop=$filearr name=sn }><{if $smarty.section.sn.index==0}>&nbsp;&nbsp;&nbsp;<h1 style="font-size:14px;">附件下载:</h1><{/if}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/index.php/index/downfile/type/1/id/<{$filearr[sn].id}>/scid/<{$scid}>"><font color="#FF0000"><b><{getname url="<{$filearr[sn].urlfile}>"}><{/getname}></b></font></a></br><{/section}></article></p>  
+                   </div>
+     <hr style="border:1px dotted #a8a888;" /><br/>
+       <{if !$smarty.session.userinfo.id}>
+        <div class="tc">
+                   <span>请登录后评论，立即 </span><a href="#login" >登录</a> 
+        </div>
+        <{else}>
+        <div class="replycontent">
+            <form  method="post" id="form1">
+          			 <input type="hidden" name="scid" id="scid_" value="<{$scid}>">
+                     <input type="hidden" name="title_id" value="<{$arrOne[0].id}>">
+                 	<input type="hidden" name="username_id" value="<{$smarty.session.userinfo.id}>">
+                    <input type="hidden" name="nodeid" value="<{$nodeid}>">
+					<textarea id="message2" name="content" kd="edit" tipmsg="欢迎你的留言" class="wbpmtxtdefault wbpmtxt2"  onkeyup="javascript:checkWord(140,event,'wordCheck1');" onFocus="if(value=='欢迎你的评论') {value='' ;this.style.color='#000'};" onBlur="if (value=='') {value='欢迎你的评论';this.style.color='#99999';};">欢迎你的评论</textarea></form>
+				
+		</div>
+         <div class="submit">                                                                   
+					<div style="text-align:right;" class="wbpm_right"><span class="wbpmcount">还能输入<span class="wbpmtextlimit" id="wordCheck1">140</span>字</span><a ck="send" class="wbpmsend" id="pm_send_btn" href="javascript:;" onClick="putcomment();return false;">发送</a>
+					</div>
+					<div id="Pmreply_area_"></div>
+		</div>
+     
+       </br>
+      <div id="commentw"><{section loop=$commentls name=ls}>  <div id="comments<{$commentls[ls].id}>">  <div  class="item-comment  item-comment-quote" > <div class="author-comment top"> <span class="index-comment"><{$commentls[ls].username}></span>  <span class="time_"><{$commentls[ls].times}></span></div>  <div class="content-comment"><{$commentls[ls].content}></div>   <div class="author-comment" > <p class="floor-comment"><a href="javascript:open_comment(<{$commentls[ls].id}>,<{$arrOne[0].id}>,<{$scid}>,<{$commentls[ls].username_id}>,<{$nodeid}>);" class="fr">回复</a></p>  </div></div>  <{section loop=$commentlson name=tls}><{if $commentls[ls].id==$commentlson[tls].cid}><div  class="item-comment  item-comment-quote backbg" > <div class="author-comment top"> <span class="index-comment"><{$commentlson[tls].username}></span>  <span class="time_"><{$commentlson[tls].times}></span></div>  <div class="content-comment"><{$commentlson[tls].content}></div>  </div> <{/if}><{/section}> </div> </br><{/section}> </div><{/if}>
+    </div>
+</div>
+<script>
+function showcomment(js){
+	
+    var s = '<div id="comments'+js.cid+'"> <div  style="background:#fff"><div  class="item-comment  item-comment-quote" > <div class="author-comment top"> <span class="index-comment">'+js.username+'</span>  <span class="time_">'+js.times+'</span></div>  <div class="content-comment">'+js.content+'</div> <div class="author-comment" > <p class="floor-comment"><a href="javascript:open_comment('+js.cid+','+title_id+','+scid+','+js.username_id+','+js.nodeid+');" class="fr">回复</a></p>  </div>  </div> </div></div></br>';
+	$("#commentw").prepend(s);
+	$("#message2").val('');
+}
+function putcomment() {
+	
+		 var msgid = mini.loading("正在处理请稍后......", "提交评论");
+        $.post("/index.php/comment/insert", $("#form1").serialize(),function(d){
+				mini.hideMessageBox(msgid);
+				if(!d.error){
+					showcomment(d);
+				}else{
+					alertClick(d.content);
+				}
+				
+		},"json");
+}
+
+scid = 0;
+scid = <{$scid}>;
+title_id = <{$arrOne[0].id}>;
+function expandt(){
+var a = window.location.href.split("/");
+var c = a.length-1 , i=0 , l = 0;
+for( i=0; i<c ; i++){
+	if(a[i]=='nodeid'){
+		l = i;
+		
+		break;
+	}
+}
+if(l){  
+		mini.parse();
+		var tree = mini.get("tree1"),n = a[l+1];
+		tree.expandNode(tree.expandPath(n)); 
+		tree.selectNode(n);
+	}
+
+}	
+expandt();
+</script>
+<{include file="public/footer.html"}>
